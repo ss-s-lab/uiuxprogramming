@@ -1,45 +1,95 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
-  <title>StudyPath</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyPath | 유학 준비 서비스</title>
 </head>
+
 <body>
+  <!--
+    사용자: 해외 유학을 준비하는 사람
+    목적: 복잡한 유학 준비 과정을 체계적으로 관리
+    핵심 행동: 목표 국가를 입력하고 맞춤 유학 준비 정보 확인
+    정보 순서: 소개 → 주요 기능 → 이용 방법 → 시작하기
+    -->
+
   <header>
-    <h1>유학 준비 서비스</h1>
+    <h1>StudyPath</h1>
     <p>복잡한 유학 준비를 한 곳에서 관리하세요.</p>
+
+     <nav aria-label="주요 메뉴">
+        <a href="#about">서비스 소개</a>
+        <a href="#features">주요 기능</a>
+        <a href="#how">이용 방법</a>
+        <a href="#start">시작하기</a>
+    </nav>
   </header>
 
-  <h2>서비스 소개</h2>
-  <h3>복잡한 유학 준비를 더 간단하게</h3>
 
-  <img src="assets/images/service.png" alt="나만의 유학 여정을 설계하는 사용자">
+
+  <main>
+    <section id="about">
+    <h2>StudyPath란?</h2>
+    <p>해외 유학을 준비하는 학생과 직장인을 위한 유학 준비 관리 서비스입니다.</p>
+    <p>학교 지원, 어학 시험, 서류 준비 등 복잡한 유학 준비 과정을 단계별로 정리하여 자신의 준비 상황을 쉽게 확인할 수 있도록 도와줍니다.</p>
+
+     <img src="assets/images/service.png" alt="노트북과 자료를 활용해 유학 준비 계획을 세우는 사용자">
+
+  </section>
+
+    <section id="features">
+      <h2>주요 기능</h2>
+      <ul>
+        <li>
+           <h3>맞춤 준비 일정</h3>
+           <p>목표 국가와 지원 시기에 맞춰 필요한 준비 일정을 확인할 수 있습니다.</p>
+        </li>
+        <li>
+           <h3>어학 시험 관리</h3>
+           <p> IELTS, TOEFL 등 필요한 어학 시험과 목표 점수를 관리할 수 있습니다.</p>
+          </li>
+          <li>
+            <h3>지원 서류 체크리스트</h3>
+            <p>자기소개서, 성적표, 어학 성적 등 지원에 필요한 서류를 체크리스트로 관리할 수 있습니다.</p>
+          </li>
+        </ul>
+      </section>
+      
+      <section id="how">
+        <h2>이용 방법</h2>
+        <ol>
+          <li>목표 국가를 입력합니다.</li>
+          <li>국가별 유학 준비 과정을 확인합니다.</li>
+          <li>필요한 준비 항목을 체크하며 관리합니다.</li>
+        </ol>
+        </section>
+
+   
+    <section id="start">
+       <h2>나만의 유학 준비를 시작해 보세요</h2>
+
+      <form>
+        <label for="country">목표 국가</label>
+        <input type="text" id="country" name="country" placeholder="예: 미국, 영국, 캐나다">
+        <button type="submit">준비 과정 보기</button>
+      </form>
+
+      <h3>유학 소식 받기</h3>
+      <form>
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" placeholder="example@email.com">
+        <button type="submit">소식 받기</button>
+      </form>
+    </section>
+  </main>
   
+  <footer>
+    <small>© 2026 StudyPath</small>
+  </footer>
 
-  <h2>주요 기능</h2>
-  <ul>
-    <li>
-       <h3>맞춤 준비 일정</h3>
-       <p>목표 국가와 지원 시기에 맞춰 필요한 준비 일정을 확인할 수 있습니다.</p>
-    </li>
-    <li>
-       <h3>어학 시험 관리</h3>
-       <p> IELTS, TOEFL 등 필요한 어학 시험과 목표 점수를 관리할 수 있습니다.</p>
-    </li>
-    <li>
-       <h3>지원 서류 체크리스트</h3>
-       <p>자기소개서, 성적표, 어학 성적 등 지원에 필요한 서류를 체크리스트로 관리할 수 있습니다.</p>
-   </li>
-  </ul>
 
-  <h2>이용 방법</h2>
-  <ol>
-    <li>회원가입 및 로그인</li>
-    <li>목표 국가를 선택합니다.</li>
-    <li>현재 준비 상황을 입력합니다.</li>
-    <li>맞춤 유학 준비 체크리스트를 확인합니다.</li>
-    <li>준비 항목을 완료하며 진행 상황을 관리합니다.</li>
-  </ol>
   </body>
 
 </html>
