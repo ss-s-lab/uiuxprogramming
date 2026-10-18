@@ -52,59 +52,157 @@
      </div>
   </section>
 
-    <section id="features">
-      <h2>주요 기능</h2>
-      <ul class="features-list">
-        <li class="feature-card">
-           <h3>맞춤 준비 일정</h3>
-           <p>목표 국가와 지원 시기에 맞춰 필요한 준비 일정을 확인할 수 있습니다.</p>
-        </li>
+<section id="features">
+  <h2>주요 기능</h2>
 
-        <li class="feature-card">
-           <h3>어학 시험 관리</h3>
-           <p> IELTS, TOEFL 등 필요한 어학 시험과 목표 점수를 관리할 수 있습니다.</p>
-          </li>
-          
-          <li class="feature-card">
-            <h3>지원 서류 체크리스트</h3>
-            <p>자기소개서, 성적표, 어학 성적 등 지원에 필요한 서류를 체크리스트로 관리할 수 있습니다.</p>
-          </li>
-        </ul>
-      </section>
-      
-      <section id="how">
-        <h2>이용 방법</h2>
-        <ol>
-          <li>목표 국가를 입력합니다.</li>
-          <li>국가별 유학 준비 과정을 확인합니다.</li>
-          <li>필요한 준비 항목을 체크하며 관리합니다.</li>
-        </ol>
-        </section>
+  <div class="tabs" role="tablist" aria-label="유학 준비 정보 선택">
 
-   
+    <button
+      id="tab-schedule"
+      class="tab is-active"
+      type="button"
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel-schedule"
+      data-target="#panel-schedule">
+      맞춤 준비 일정
+    </button>
+
+    <button
+      id="tab-language"
+      class="tab"
+      type="button"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-language"
+      data-target="#panel-language">
+      어학 시험 관리
+    </button>
+
+    <button
+      id="tab-document"
+      class="tab"
+      type="button"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-document"
+      data-target="#panel-document">
+      지원 서류
+    </button>
+
+  </div>
+
+  <div
+    id="panel-schedule"
+    class="panel is-active"
+    role="tabpanel"
+    aria-labelledby="tab-schedule">
+
+    <h3>맞춤 준비 일정</h3>
+    <p>
+      목표 국가와 지원 시기에 맞춰 필요한 준비 일정과
+      마감일을 확인할 수 있습니다.
+    </p>
+  </div>
+
+  <div
+    id="panel-language"
+    class="panel"
+    role="tabpanel"
+    aria-labelledby="tab-language"
+    hidden>
+
+    <h3>어학 시험 관리</h3>
+    <p>
+      IELTS, TOEFL 등 필요한 어학 시험과
+      목표 점수를 확인하고 관리할 수 있습니다.
+    </p>
+  </div>
+
+  <div
+    id="panel-document"
+    class="panel"
+    role="tabpanel"
+    aria-labelledby="tab-document"
+    hidden>
+
+    <h3>지원 서류</h3>
+    <p>
+      자기소개서, 성적표, 어학 성적 등
+      지원에 필요한 서류를 확인하고 관리할 수 있습니다.
+    </p>
+  </div>
+
+</section>
+
+<section id="how">
+  <h2>이용 방법</h2>
+  <ol>
+    <li>목표 국가를 입력합니다.</li>
+    <li>국가별 유학 준비 과정을 확인합니다.</li>
+    <li>필요한 준비 항목을 체크하며 관리합니다.</li>
+  </ol>
+</section>
+
     <section id="start">
-       <h2>나만의 유학 준비를 시작해 보세요</h2>
+  <h2>나만의 유학 준비를 시작해 보세요</h2>
 
-      <form>
-        <label for="country">목표 국가</label>
-        <input type="text" id="country" name="country" placeholder="예: 미국, 영국, 캐나다">
-        <button type="submit">준비 과정 보기</button>
-      </form>
-      </section>
+  <div class="country-setting">
+    <label for="country">목표 국가</label>
+    <input
+      type="text"
+      id="country"
+      name="country"
+      placeholder="예: 독일, 프랑스, 미국">
+  </div>
 
-    <section id="newsletter" class="newsletter-card">
-      <h3>유학 소식 받기</h3>
-      <form id="newsletter-form">
-        <label for="email">이메일</label>
-        <input type="email" id="email" name="email" placeholder="example@email.com">
-        <button id="newsletter-button" type="submit">소식 받기</button>
-      </form>
+  <div class="prepare-list">
+    <h3 id="prepare-title">유학 준비 체크리스트</h3>
 
-      <p id="newsletter-message" class="hidden">
-          이메일을 입력한 뒤 신청해주세요.
-      </p>
+    <label class="check-item">
+      <input class="prepare-check" type="checkbox">
+      지원할 학교 조사
+    </label>
 
-    </section>
+    <label class="check-item">
+      <input class="prepare-check" type="checkbox">
+      어학 시험 준비
+    </label>
+
+    <label class="check-item">
+      <input class="prepare-check" type="checkbox">
+      지원 서류 준비
+    </label>
+
+    <p id="progress-message" aria-live="polite">
+      준비 진행률: 0 / 3
+    </p>
+  </div>
+</section>
+
+
+ <section id="newsletter" class="newsletter-card">
+  <h3>유학 소식 받기</h3>
+
+  <form id="newsletter-form">
+    <label for="email">이메일</label>
+
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="example@email.com">
+
+    <button id="newsletter-button" type="submit">
+      소식 받기
+    </button>
+  </form>
+
+  <p id="newsletter-message" aria-live="polite">
+    이메일을 입력한 뒤 신청해 주세요.
+  </p>
+</section>
+
   </main>
   
   <footer>
