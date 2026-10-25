@@ -205,4 +205,192 @@ function handleTabClick(event) {
 // 각 탭에 click 이벤트 연결
 tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
+
+});
+// 7주차 유학 준비 사용자 흐름
+
+const planStart = document.querySelector("#planStart");
+const planFlow = document.querySelector("#planFlow");
+const planSteps = document.querySelectorAll(".plan-step");
+const planProgress = document.querySelector("#planProgress");
+
+const countryError = document.querySelector("#countryError");
+const planSummary = document.querySelector("#planSummary");
+const planCompleteMessage =
+    document.querySelector("#planCompleteMessage");
+
+const planNext1 = document.querySelector("#planNext1");
+const planBack2 = document.querySelector("#planBack2");
+const planNext2 = document.querySelector("#planNext2");
+const planBack3 = document.querySelector("#planBack3");
+const planComplete = document.querySelector("#planComplete");
+const planRestart = document.querySelector("#planRestart");
+
+const planStepNames = [
+    "목표 국가 입력",
+    "준비 상태 선택",
+    "내용 확인"
+];
+
+
+// 현재 단계 표시
+function showPlanStep(step) {
+
+    planSteps.forEach(function (item) {
+        item.hidden =
+            Number(item.dataset.step) !== step;
+    });
+
+    if (step <= 3) {
+        planProgress.textContent =
+            step + " / 3 · " + planStepNames[step - 1];
+    } else {
+        planProgress.textContent =
+            "유학 준비 플랜 완료";
+    }
+}
+
+
+// 유학 준비 시작
+planStart.addEventListener("click", function () {
+
+    planFlow.hidden = false;
+    planStart.hidden = true;
+
+    showPlanStep(1);
+
+    countryInput.focus();
+});
+
+
+// 1단계 → 2단계
+planNext1.addEventListener("click", function () {
+
+    const country = countryInput.value.trim();
+
+    if (country === "") {
+
+        countryError.textContent =
+            "목표 국가를 입력해 주세요. 예: 독일, 프랑스";
+
+        countryInput.classList.add("has-error");
+        countryInput.focus();
+
+        return;
+    }
+
+    countryError.textContent = "";
+    countryInput.classList.remove("has-error");
+
+    showPlanStep(2);
+});
+
+
+// 국가를 다시 입력하면 오류 상태 제거
+countryInput.addEventListener("input", function () {
+
+    if (countryInput.value.trim() !== "") {
+        countryError.textContent = "";
+        countryInput.classList.remove("has-error");
+    }
+});
+
+
+// 2단계 → 1단계
+planBack2.addEventListener("click", function () {
+
+    showPlanStep(1);
+    countryInput.focus();
+});
+
+
+// 2단계 → 3단계
+planNext2.addEventListener("click", function () {
+
+    const country = countryInput.value.trim();
+    const checkedCount = getCheckedCount();
+
+    let completedItems = [];
+
+    prepareChecks.forEach(function (check) {
+
+        if (check.checked === true) {
+            completedItems.push(check.value);
+        }
+    });
+
+    let completedText =
+        "아직 완료한 준비 항목이 없습니다.";
+
+    if (completedItems.length > 0) {
+        completedText =
+            "완료한 준비: "
+            + completedItems.join(", ");
+    }
+
+    planSummary.textContent =
+        "목표 국가: "
+        + country
+        + " / 준비 진행률: "
+        + checkedCount
+        + " / 3 / "
+        + completedText;
+
+    showPlanStep(3);
+});
+
+
+// 3단계 → 2단계
+planBack3.addEventListener("click", function () {
+
+    showPlanStep(2);
+});
+
+
+// 플랜 완료
+planComplete.addEventListener("click", function () {
+
+    const country = countryInput.value.trim();
+    const checkedCount = getCheckedCount();
+
+    planCompleteMessage.textContent =
+        country
+        + " 유학 준비 플랜이 완성되었습니다. "
+        + "현재 준비 진행률은 "
+        + checkedCount
+        + " / 3입니다.";
+
+    showPlanStep(4);
+});
+
+
+// 다시 시작하기
+planRestart.addEventListener("click", function () {
+
+    countryInput.value = "";
+
+    prepareChecks.forEach(function (check) {
+        check.checked = false;
+    });
+
+    prepareTitle.textContent =
+        "유학 준비 체크리스트";
+
+    progressMessage.textContent =
+        "준비 진행률: 0 / 3";
+
+    progressMessage.classList.remove(
+        "is-progress",
+        "is-complete"
+    );
+
+    countryError.textContent = "";
+    countryInput.classList.remove("has-error");
+
+    planSummary.textContent = "";
+    planCompleteMessage.textContent = "";
+
+    showPlanStep(1);
+
+    countryInput.focus();
 });
