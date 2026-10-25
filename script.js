@@ -394,3 +394,109 @@ planRestart.addEventListener("click", function () {
 
     countryInput.focus();
 });
+
+// 중간고사 - 목표 입학일까지 남은 준비 기간 확인
+
+const admissionDateInput =
+    document.querySelector("#admissionDate");
+
+const deadlineError =
+    document.querySelector("#deadlineError");
+
+const deadlineResult =
+    document.querySelector("#deadlineResult");
+
+const deadlineCalculate =
+    document.querySelector("#deadlineCalculate");
+
+
+function resetDeadlinePlanner() {
+    admissionDateInput.value = "";
+
+    deadlineError.textContent = "";
+
+    deadlineResult.textContent = "";
+
+    deadlineResult.classList.remove("is-success");
+}
+
+
+admissionDateInput.addEventListener("input", function () {
+    deadlineError.textContent = "";
+
+    deadlineResult.textContent = "";
+
+    deadlineResult.classList.remove("is-success");
+});
+
+
+deadlineCalculate.addEventListener("click", function () {
+
+    const admissionDate =
+        admissionDateInput.value;
+
+
+    // 날짜를 입력하지 않은 경우
+    if (admissionDate === "") {
+        deadlineError.textContent =
+            "목표 입학일을 선택해 주세요.";
+
+        admissionDateInput.focus();
+
+        return;
+    }
+
+
+    const targetDate =
+        new Date(admissionDate + "T00:00:00");
+
+    const today =
+        new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+
+    // 오늘 또는 과거 날짜를 선택한 경우
+    if (targetDate <= today) {
+        deadlineError.textContent =
+            "오늘 이후의 입학 목표일을 선택해 주세요.";
+
+        deadlineResult.textContent = "";
+
+        deadlineResult.classList.remove("is-success");
+
+        admissionDateInput.focus();
+
+        return;
+    }
+
+
+    const oneDay =
+        1000 * 60 * 60 * 24;
+
+    const daysLeft =
+        Math.ceil(
+            (targetDate - today) / oneDay
+        );
+
+
+    const country =
+        countryInput.value.trim();
+
+
+    deadlineError.textContent = "";
+
+    deadlineResult.textContent =
+        country
+        + " 유학 목표일까지 "
+        + daysLeft
+        + "일 남았습니다.";
+
+
+    deadlineResult.classList.add("is-success");
+});
+
+
+planRestart.addEventListener("click", function () {
+    resetDeadlinePlanner();
+});

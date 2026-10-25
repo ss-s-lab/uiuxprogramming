@@ -245,19 +245,52 @@
       </div>
     </section>
 
+<!-- 완료 -->
+<section class="plan-step" data-step="4" hidden>
+  <h3>유학 준비 플랜이 완성되었습니다</h3>
 
-    <!-- 완료 -->
-    <section class="plan-step" data-step="4" hidden>
-      <h3>유학 준비 플랜이 완성되었습니다</h3>
+  <p id="planCompleteMessage"></p>
 
-      <p id="planCompleteMessage"></p>
+  <button id="deadlineOpen" type="button">
+    입학 목표일 설정하기
+  </button>
 
-      <button id="planRestart" type="button">
-        다시 시작하기
-      </button>
-    </section>
+  <!-- 중간고사 새 기능 -->
+ <!-- 완료 -->
+<section class="plan-step" data-step="4" hidden>
+  <h3>유학 준비 플랜이 완성되었습니다</h3>
 
+  <p id="planCompleteMessage"></p>
+
+  <!-- 중간고사 새 기능 -->
+  <div id="deadlinePlanner">
+    <h4>목표 입학일 설정</h4>
+
+    <p>
+      목표 입학일을 선택하면 유학 준비 기간이 얼마나 남았는지 확인할 수 있습니다.
+    </p>
+
+    <label for="admissionDate">
+      목표 입학일
+    </label>
+
+    <input
+      type="date"
+      id="admissionDate"
+      name="admissionDate">
+
+    <p id="deadlineError" role="alert"></p>
+
+    <button id="deadlineCalculate" type="button">
+      남은 준비 기간 확인하기
+    </button>
+
+    <p id="deadlineResult" aria-live="polite"></p>
   </div>
+
+  <button id="planRestart" type="button">
+    다시 시작하기
+  </button>
 </section>
 
 

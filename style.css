@@ -306,6 +306,43 @@ button:active{
   cursor: not-allowed;
 }
 
+/* 중간고사 - 목표 입학일까지 남은 기간 확인 */
+
+#deadlinePlanner{
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  background-color: #f8fafc;
+}
+
+#deadlinePlanner label{
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+#admissionDate{
+  width: 100%;
+  max-width: 100%;
+}
+
+#deadlineError{
+  margin-top: 8px;
+  color: #9d2439;
+}
+
+#deadlineResult{
+  margin-top: 16px;
+}
+
+#deadlineResult.is-success{
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #eef4fb;
+  font-weight: 700;
+}
 
 /* 웹페이지가 표시되는 가로 폭이 768px 이하일 때만 적용 */
 
@@ -330,6 +367,14 @@ button:active{
 
   h2{
     font-size: 28px;
+  }
+
+  #deadlinePlanner{
+    padding: 16px;
+  }
+
+  #deadlineCalculate{
+    width: 100%;
   }
 
 
