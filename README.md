@@ -249,6 +249,7 @@ PC와 모바일 화면에서 이메일 입력과 신청 기능이 정상적으�
 
 모바일 화면에서도 날짜 선택, 남은 준비 기간 확인, 오류 안내 기능을 정상적으로 조작할 수 있는 것을 확인했습니다.
 
-## 배포 주소
+## 제출 주소
 
-https://ss-s-lab.github.io/uiuxprogramming/
+- GitHub 저장소: https://github.com/ss-s-lab/uiuxprogramming
+- 배포 웹페이지: https://ss-s-lab.github.io/uiuxprogramming/
