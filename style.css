@@ -163,7 +163,7 @@ p{
 
 /* 입력창과 버튼 */
 
-form{
+#newsletter-form{
   display: flex;
   align-items: center;
   gap: 12px;
@@ -351,6 +351,7 @@ button:active{
 }
 
 #study-plan-form{
+  display: block;
   margin-top: 20px;
   padding: 24px;
   border: 1px solid #d8e2ef;
@@ -525,9 +526,9 @@ button:active{
 
   /* 이메일 입력창과 버튼을 세로로 배치 */
 
-  form{
-    flex-direction: column;
-    align-items: stretch;
+  #newsletter-form{
+  flex-direction: column;
+  align-items: stretch;
   }
 
   input,
@@ -536,21 +537,21 @@ button:active{
   }
 
   button{
-    /* 모바일에서도 버튼의 누르는 영역이 너무 낮아지지 않게 설정 */
-    min-height: 48px;
-    .plan-step{
-    padding: 16px;
-  }
+  min-height: 48px;
+ }
 
-  .plan-actions{
-    flex-direction: column;
-  }
+.plan-step{
+  padding: 16px;
+ }
 
-  .plan-step button{
-    width: 100%;
-    margin-top: 8px;
-  }
-  
+.plan-actions{
+  flex-direction: column;
+ }
+
+.plan-step button{
+  width: 100%;
+  margin-top: 8px;
+ } 
 }
 
   /* 서비스 소개의 글과 이미지를 세로로 배치 */
@@ -628,10 +629,6 @@ button:active{
   flex: 1;
   min-width: 0;
 }
-}
-
-#study-plan-form{
-  display: block;
 }
 
 .study-field{
