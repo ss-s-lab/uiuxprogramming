@@ -245,17 +245,6 @@
       </div>
     </section>
 
-<!-- 완료 -->
-<section class="plan-step" data-step="4" hidden>
-  <h3>유학 준비 플랜이 완성되었습니다</h3>
-
-  <p id="planCompleteMessage"></p>
-
-  <button id="deadlineOpen" type="button">
-    입학 목표일 설정하기
-  </button>
-
-  <!-- 중간고사 새 기능 -->
  <!-- 완료 -->
 <section class="plan-step" data-step="4" hidden>
   <h3>유학 준비 플랜이 완성되었습니다</h3>
@@ -293,6 +282,166 @@
   </button>
 </section>
 
+<section id="study-plan-section">
+  <h2>유학 지원 목표 저장</h2>
+
+   <p>
+    지원을 희망하는 학교 또는 전공과 유학 과정을 입력해
+    나만의 지원 목표를 저장해 보세요.
+  </p>
+
+  <form id="study-plan-form" novalidate aria-busy="false">
+
+    <!-- 지원 학교 또는 전공 -->
+    <div class="study-field" id="school-field">
+      <label for="target-school">
+         지원 희망 학교 또는 전공 <span class="required">필수</span>
+      </label>
+
+      <input
+        id="target-school"
+        name="targetSchool"
+        type="text"
+        minlength="2"
+        maxlength="60"
+        required
+        placeholder="예: OO대학교, 경영학"
+        aria-describedby="school-help school-count school-error">
+
+      <div class="study-field-meta">
+        <p id="school-help">
+          학교명이나 관심 전공명을 2자 이상 입력해 주세요.
+        </p>
+
+        <p id="school-count" aria-live="polite">
+          0 / 60자
+        </p>
+      </div>
+
+      <p
+        id="school-error"
+        class="study-error"
+        role="alert">
+      </p>
+    </div>
+
+
+    <!-- 희망 유학 과정 -->
+    <div class="study-field">
+      <label for="admission-term">
+       희망 유학 과정 <span class="required">필수</span>
+    </label>
+
+     <select
+     id="admission-term"
+     name="admissionTerm"
+     required
+     aria-describedby="term-help term-error">
+
+     <option value="">유학 과정을 선택해 주세요</option>
+     <option value="학사">학사 과정</option>
+     <option value="석사">석사 과정</option>
+     <option value="박사">박사 과정</option>
+     <option value="어학연수">어학연수</option>
+     <option value="기타">기타 과정</option>
+     </select>
+
+    <p id="term-help" class="study-help">
+      현재 준비하고 있는 유학 과정을 선택해 주세요.
+    </p>
+
+      <p
+        id="term-error"
+        class="study-error"
+        role="alert">
+      </p>
+    </div>
+
+
+    <!-- 조건부 입력 -->
+    <div class="study-field">
+      <label class="study-check-row" for="language-option">
+
+        <input
+          id="language-option"
+          name="languagePreparation"
+          type="checkbox"
+          value="included"
+          aria-controls="language-options"
+          aria-expanded="false">
+
+        <span>
+        <strong>어학 시험 목표도 함께 저장하기</strong>
+        <small>
+          선택하면 준비할 공인 어학시험을 정할 수 있습니다.
+        </small>
+        </span>
+
+      </label>
+
+      <fieldset
+        id="language-options"
+        class="language-options"
+        hidden
+        disabled>
+
+        <legend>준비할 어학 시험</legend>
+
+        <div class="language-radio-list">
+          <label>
+        <input
+         type="radio"
+         name="language-test"
+         value="IELTS">
+         IELTS
+        </label>
+
+        <label>
+        <input
+         type="radio"
+         name="language-test"
+         value="TOEFL">
+         TOEFL
+        </label>
+
+       <label>
+       <input
+       type="radio"
+       name="language-test"
+       value="PTE">
+       PTE
+      </label>
+
+      <label>
+      <input
+      type="radio"
+      name="language-test"
+      value="기타">
+      기타 공인 어학시험
+      </label>
+        </div>
+      </fieldset>
+
+      <p
+        id="language-error"
+        class="study-error"
+        role="alert">
+      </p>
+    </div>
+
+
+    <button id="study-plan-save" type="submit">
+      지원 목표 저장하기
+    </button>
+
+    <p
+      id="study-plan-status"
+      role="status"
+      aria-live="polite">
+    </p>
+
+  </form>
+</section>
 
  <section id="newsletter" class="newsletter-card">
   <h3>유학 소식 받기</h3>

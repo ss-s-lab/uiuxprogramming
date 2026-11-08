@@ -344,6 +344,138 @@ button:active{
   font-weight: 700;
 }
 
+/* 9주차 - 맞춤 유학 준비 계획 폼 */
+
+#study-plan-section{
+  margin-top: 40px;
+}
+
+#study-plan-form{
+  margin-top: 20px;
+  padding: 24px;
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.study-field{
+  margin-bottom: 24px;
+}
+
+.study-field > label:not(.study-check-row){
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.study-field input[type="text"],
+.study-field select{
+  width: 100%;
+  max-width: 100%;
+}
+
+.required{
+  color: #9d2439;
+  font-size: 13px;
+  margin-left: 4px
+}
+
+.study-field-meta{
+  display: flex;
+  gap: 16px;
+}
+
+.study-field-meta p,
+.study-help{
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+#school-count{
+  flex: none;
+}
+
+.study-error{
+  min-height: 22px;
+  margin-top: 6px;
+  color: #9d2439;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.study-field.is-valid input{
+  border-color: #16805d;
+}
+
+.study-field.is-valid #school-help{
+  color: #116448;
+}
+
+.study-field.has-error input,
+.study-field.has-error select{
+  border-color: #9d2439;
+}
+
+.study-check-row{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.study-check-row input{
+  flex: none;
+  margin-top: 4px;
+}
+
+.study-check-row span{
+  display: flex;
+  flex-direction: column;
+}
+
+.study-check-row strong{
+  display: block;
+}
+
+.study-check-row small{
+  margin-top: 4px;
+  color: #666666;
+}
+
+.language-options{
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #d8e2ef;
+  border-radius: 10px;
+  background-color: #f4f7fb;
+}
+
+.language-options[hidden]{
+  display: none;
+}
+
+.language-radio-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+#study-plan-status{
+  margin-top: 16px;
+}
+
+#study-plan-status.is-success{
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #eef4fb;
+  font-weight: 700;
+}
+
+#study-plan-status.is-error{
+  color: #9d2439;
+  font-weight: 700;
+}
+
 /* 웹페이지가 표시되는 가로 폭이 768px 이하일 때만 적용 */
 
 @media (max-width: 768px){
@@ -417,8 +549,9 @@ button:active{
   .plan-step button{
     width: 100%;
     margin-top: 8px;
-  }}
-
+  }
+  
+}
 
   /* 서비스 소개의 글과 이미지를 세로로 배치 */
 
@@ -446,7 +579,6 @@ button:active{
     text-align: left;
   }
 
-
   /* 체크리스트 여백 조정 */
 
   .prepare-list{
@@ -456,4 +588,88 @@ button:active{
   .check-item input[type="checkbox"]{
     width: auto;
   }
+
+    #study-plan-form{
+    padding: 16px;
+  }
+
+  .study-field-meta{
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .language-radio-list{
+    flex-direction: column;
+  }
+
+  #study-plan-save{
+    width: 100%;
+  }
+
+  .study-check-row input[type="checkbox"]{
+  width: auto;
+  min-width: auto;
+  flex: 0 0 auto;
+}
+
+.language-radio-list input[type="radio"]{
+  width: auto;
+  min-width: auto;
+  flex: 0 0 auto;
+}
+
+.study-check-row{
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.study-check-row span{
+  flex: 1;
+  min-width: 0;
+}
+}
+
+#study-plan-form{
+  display: block;
+}
+
+.study-field{
+  width: 100%;
+}
+
+.study-field input[type="text"],
+.study-field select{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#study-plan-save{
+  display: inline-block;
+  width: auto;
+  min-width: 220px;
+  white-space: nowrap;
+}
+
+.study-check-row input[type="checkbox"]{
+  width: auto;
+  min-width: auto;
+  flex: 0 0 auto;
+}
+
+.language-radio-list input[type="radio"]{
+  width: auto;
+  min-width: auto;
+  flex: 0 0 auto;
+}
+
+.study-check-row{
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.study-check-row span{
+  flex: 1;
+  min-width: 0;
 }

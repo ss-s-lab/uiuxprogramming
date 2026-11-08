@@ -500,3 +500,484 @@ deadlineCalculate.addEventListener("click", function () {
 planRestart.addEventListener("click", function () {
     resetDeadlinePlanner();
 });
+
+// 9주차 - 맞춤 유학 준비 계획 폼
+
+const studyPlanForm =
+    document.querySelector("#study-plan-form");
+
+const targetSchool =
+    document.querySelector("#target-school");
+
+const schoolField =
+    document.querySelector("#school-field");
+
+const schoolHelp =
+    document.querySelector("#school-help");
+
+const schoolCount =
+    document.querySelector("#school-count");
+
+const schoolError =
+    document.querySelector("#school-error");
+
+const admissionTerm =
+    document.querySelector("#admission-term");
+
+const termError =
+    document.querySelector("#term-error");
+
+const languageOption =
+    document.querySelector("#language-option");
+
+const languageOptions =
+    document.querySelector("#language-options");
+
+const languageInputs =
+    [...document.querySelectorAll(
+        'input[name="language-test"]'
+    )];
+
+const languageError =
+    document.querySelector("#language-error");
+
+const studyPlanSave =
+    document.querySelector("#study-plan-save");
+
+const studyPlanStatus =
+    document.querySelector("#study-plan-status");
+
+
+// 주소 뒤에 ?plan-error=1을 붙이면 저장 실패 테스트
+const forcePlanFailure =
+    new URLSearchParams(location.search)
+        .has("plan-error");
+
+
+// 목표 학교 오류 표시
+function showSchoolError(message) {
+
+    targetSchool.setAttribute(
+        "aria-invalid",
+        "true"
+    );
+
+    schoolError.textContent = message;
+
+    schoolField.classList.remove("is-valid");
+
+    schoolField.classList.add("has-error");
+
+    return false;
+}
+
+
+// 목표 학교 오류 해제
+function clearSchoolError() {
+
+    targetSchool.removeAttribute("aria-invalid");
+
+    schoolError.textContent = "";
+
+    schoolField.classList.remove("has-error");
+
+    updateSchoolExperience();
+}
+
+
+// 목표 학교 입력 검증
+function validateSchool() {
+
+    const school =
+        targetSchool.value.trim();
+
+    if (school === "") {
+
+        return showSchoolError(
+            "지원 희망 학교 또는 전공을 입력해 주세요."
+        );
+    }
+
+    if (school.length < 2) {
+
+        return showSchoolError(
+            "지원 희망 학교 또는 전공을 2자 이상 입력해 주세요."
+        );
+    }
+
+    clearSchoolError();
+
+    return true;
+}
+
+
+// 입력 중 글자 수와 조건 표시
+function updateSchoolExperience() {
+
+    const length =
+        targetSchool.value.length;
+
+    const enough =
+        targetSchool.value.trim().length >= 2;
+
+    const invalid =
+        targetSchool.getAttribute(
+            "aria-invalid"
+        ) === "true";
+
+    schoolCount.textContent =
+        length + " / 60자";
+
+    schoolField.classList.toggle(
+        "is-valid",
+        enough && !invalid
+    );
+
+    if (!invalid) {
+
+        if (enough) {
+
+            schoolHelp.textContent =
+                "입력 조건을 충족했습니다.";
+        }
+        else {
+
+            schoolHelp.textContent =
+                "학교명이나 관심 전공을 2자 이상 입력해 주세요.";
+        }
+    }
+}
+
+
+// 목표 입학 시기 검증
+function validateAdmissionTerm() {
+
+    if (admissionTerm.value === "") {
+
+        admissionTerm.setAttribute(
+            "aria-invalid",
+            "true"
+        );
+
+        termError.textContent =
+            "희망 유학 과정을 선택해 주세요.";
+
+        return false;
+    }
+
+    admissionTerm.removeAttribute(
+        "aria-invalid"
+    );
+
+    termError.textContent = "";
+
+    return true;
+}
+
+
+// 조건부 어학 입력 표시
+function syncLanguageFields() {
+
+    const open =
+        languageOption.checked;
+
+    languageOption.setAttribute(
+        "aria-expanded",
+        String(open)
+    );
+
+    languageOptions.hidden = !open;
+
+    languageOptions.disabled = !open;
+
+    if (!open) {
+
+        languageInputs.forEach(function (input) {
+            input.checked = false;
+            input.removeAttribute("aria-invalid");
+        });
+
+        languageError.textContent = "";
+    }
+}
+
+
+// 어학 시험 선택 검증
+function validateLanguage() {
+
+    if (languageOption.checked === false) {
+        return true;
+    }
+
+    const selectedLanguage =
+        document.querySelector(
+            'input[name="language-test"]:checked'
+        );
+
+    if (selectedLanguage === null) {
+
+        languageError.textContent =
+            "준비할 어학 시험을 선택해 주세요.";
+
+        languageInputs[0].setAttribute(
+            "aria-invalid",
+            "true"
+        );
+
+        return false;
+    }
+
+    languageInputs.forEach(function (input) {
+        input.removeAttribute("aria-invalid");
+    });
+
+    languageError.textContent = "";
+
+    return true;
+}
+
+
+// 제출 상태 변경
+function setStudyPlanSubmitState(
+    loading,
+    message,
+    state
+) {
+
+    studyPlanForm.setAttribute(
+        "aria-busy",
+        String(loading)
+    );
+
+    studyPlanSave.disabled = loading;
+
+    if (loading) {
+        studyPlanSave.textContent = "저장하는 중…";
+    }
+    else {
+        studyPlanSave.textContent =
+           "지원 목표 저장하기";
+    }
+
+    studyPlanStatus.textContent = message;
+
+    studyPlanStatus.classList.remove(
+        "is-success",
+        "is-error"
+    );
+
+    if (state === "success") {
+        studyPlanStatus.classList.add(
+            "is-success"
+        );
+    }
+
+    if (state === "error") {
+        studyPlanStatus.classList.add(
+            "is-error"
+        );
+    }
+}
+
+
+// 잠시 기다리는 함수
+function waitStudyPlan(milliseconds) {
+
+    return new Promise(function (resolve) {
+
+        window.setTimeout(
+            resolve,
+            milliseconds
+        );
+    });
+}
+
+
+// 브라우저에 저장
+async function saveStudyPlan(plan) {
+
+    await waitStudyPlan(600);
+
+    if (forcePlanFailure) {
+
+        throw new Error(
+            "수업용 저장 실패"
+        );
+    }
+
+    localStorage.setItem(
+        "studyPathSavedPlan",
+        JSON.stringify(plan)
+    );
+}
+
+
+// 입력 중 피드백
+targetSchool.addEventListener(
+    "input",
+    function () {
+
+        updateSchoolExperience();
+
+        if (
+            targetSchool.getAttribute(
+                "aria-invalid"
+            ) === "true"
+        ) {
+
+            validateSchool();
+        }
+    }
+);
+
+
+// 입학 시기 수정 시 오류 해제
+admissionTerm.addEventListener(
+    "change",
+    function () {
+
+        if (admissionTerm.value !== "") {
+
+            admissionTerm.removeAttribute(
+                "aria-invalid"
+            );
+
+            termError.textContent = "";
+        }
+    }
+);
+
+
+// 조건부 영역
+languageOption.addEventListener(
+    "change",
+    syncLanguageFields
+);
+
+
+// 라디오 선택 시 오류 해제
+languageInputs.forEach(function (input) {
+
+    input.addEventListener(
+        "change",
+        function () {
+
+            languageInputs.forEach(
+                function (item) {
+                    item.removeAttribute(
+                        "aria-invalid"
+                    );
+                }
+            );
+
+            languageError.textContent = "";
+        }
+    );
+});
+
+
+syncLanguageFields();
+
+
+// 최종 제출
+studyPlanForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        const schoolValid =
+            validateSchool();
+
+        const termValid =
+            validateAdmissionTerm();
+
+        const languageValid =
+            validateLanguage();
+
+        if (
+            !schoolValid
+            || !termValid
+            || !languageValid
+        ) {
+
+            setStudyPlanSubmitState(
+                false,
+                "입력 내용을 확인한 뒤 다시 제출해 주세요.",
+                "error"
+            );
+
+            const firstInvalid =
+                studyPlanForm.querySelector(
+                    '[aria-invalid="true"]'
+                );
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+            }
+
+            return;
+        }
+
+
+        const formData =
+            new FormData(studyPlanForm);
+
+        const plan = {
+
+            targetSchool:
+                String(
+                    formData.get(
+                        "targetSchool"
+                    )
+                ).trim(),
+
+            admissionTerm:
+                String(
+                    formData.get(
+                        "admissionTerm"
+                    )
+                ),
+
+            languagePreparation:
+                formData.get(
+                    "languagePreparation"
+                ) === "included",
+
+            languageTest:
+                String(
+                    formData.get(
+                        "language-test"
+                    ) || ""
+                )
+        };
+
+
+        setStudyPlanSubmitState(
+            true,
+            "지원 목표를 저장하고 있습니다.",
+            ""
+        );
+
+
+        try {
+
+            await saveStudyPlan(plan);
+
+            setStudyPlanSubmitState(
+                false,
+                plan.targetSchool
+                + " 지원 목표를 저장했습니다.",
+                "success"
+            );
+        }
+        catch (error) {
+
+            setStudyPlanSubmitState(
+                false,
+                "저장하지 못했습니다. 입력한 내용은 그대로 두었습니다. 다시 시도해 주세요.",
+                "error"
+            );
+        }
+    }
+);
