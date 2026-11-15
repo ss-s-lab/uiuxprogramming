@@ -24,12 +24,34 @@
     <h1>StudyPath</h1>
     <p>복잡한 유학 준비를 한 곳에서 관리하세요.</p>
 
-     <nav aria-label="주요 메뉴">
-        <a href="#about">서비스 소개</a>
-        <a href="#features">주요 기능</a>
-        <a href="#how">이용 방법</a>
-        <a href="#start">시작하기</a>
-    </nav>
+     <button
+  id="menu-toggle"
+  class="menu-toggle"
+  type="button"
+  aria-controls="main-nav"
+  aria-expanded="false">
+  메뉴 열기
+</button>
+
+<nav
+  id="main-nav"
+  class="main-nav"
+  aria-label="주요 메뉴">
+
+  <ul>
+    <li>
+      <a href="#about">서비스 소개</a>
+    </li>
+
+    <li>
+      <a href="#start">플랜 만들기</a>
+    </li>
+
+    <li>
+      <a href="#saved-goals">저장한 플랜</a>
+    </li>
+  </ul>
+</nav>
   </header>
 
 
@@ -137,24 +159,28 @@
 
 <section id="how">
   <h2>이용 방법</h2>
+
   <ol>
-    <li>목표 국가를 입력합니다.</li>
-    <li>국가별 유학 준비 과정을 확인합니다.</li>
-    <li>필요한 준비 항목을 체크하며 관리합니다.</li>
+    <li>목표 국가와 현재 준비 상태를 입력합니다.</li>
+    <li>목표 입학일을 설정하고 남은 준비 기간을 확인합니다.</li>
+    <li>
+  지원 희망 학교와 유학 과정을 입력해
+  유학 준비 플랜으로 저장합니다.
+</li>
   </ol>
 </section>
 
    <section id="start">
-  <h2>나만의 유학 준비를 시작해 보세요</h2>
+  <h2>플랜 만들기</h2>
 
   <button id="planStart" type="button">
-    유학 준비 시작하기
+    플랜 만들기 시작
   </button>
 
   <div id="planFlow" hidden>
 
     <p id="planProgress" aria-live="polite">
-      1 / 3 · 목표 국가 입력
+      1 / 4 · 목표 국가 입력
     </p>
 
     <!-- 1단계: 목표 국가 입력 -->
@@ -240,14 +266,14 @@
         </button>
 
         <button id="planComplete" type="button">
-          플랜 완성하기
+          다음 단계
         </button>
       </div>
     </section>
 
  <!-- 완료 -->
 <section class="plan-step" data-step="4" hidden>
-  <h3>유학 준비 플랜이 완성되었습니다</h3>
+  <h3>입학일과 지원 목표 입력</h3>
 
   <p id="planCompleteMessage"></p>
 
@@ -275,27 +301,27 @@
     </button>
 
     <p id="deadlineResult" aria-live="polite"></p>
+ 
   </div>
 
-  <button id="planRestart" type="button">
-    다시 시작하기
-  </button>
-</section>
-
 <section id="study-plan-section">
-  <h2>유학 지원 목표 저장</h2>
 
-   <p>
-    지원을 희망하는 학교 또는 전공과 유학 과정을 입력해
-    나만의 지원 목표를 저장해 보세요.
+  <h4>학교·유학 과정·어학 목표</h4>
+
+  <p>
+    위에서 설정한 목표 국가, 준비 상태, 목표 입학일에
+    지원 희망 학교 또는 전공과 유학 과정을 더해
+    하나의 유학 준비 플랜으로 저장해 보세요.
   </p>
 
   <form id="study-plan-form" novalidate aria-busy="false">
 
-    <!-- 지원 학교 또는 전공 -->
+    <!-- 지원 희망 학교 또는 전공 -->
     <div class="study-field" id="school-field">
+
       <label for="target-school">
-         지원 희망 학교 또는 전공 <span class="required">필수</span>
+        지원 희망 학교 또는 전공
+        <span class="required">필수</span>
       </label>
 
       <input
@@ -310,7 +336,7 @@
 
       <div class="study-field-meta">
         <p id="school-help">
-          학교명이나 관심 전공명을 2자 이상 입력해 주세요.
+          학교명이나 관심 전공을 2자 이상 입력해 주세요.
         </p>
 
         <p id="school-count" aria-live="polite">
@@ -323,44 +349,54 @@
         class="study-error"
         role="alert">
       </p>
+
     </div>
 
 
     <!-- 희망 유학 과정 -->
     <div class="study-field">
+
       <label for="admission-term">
-       희망 유학 과정 <span class="required">필수</span>
-    </label>
+        희망 유학 과정
+        <span class="required">필수</span>
+      </label>
 
-     <select
-     id="admission-term"
-     name="admissionTerm"
-     required
-     aria-describedby="term-help term-error">
+      <select
+        id="admission-term"
+        name="admissionTerm"
+        required
+        aria-describedby="term-help term-error">
 
-     <option value="">유학 과정을 선택해 주세요</option>
-     <option value="학사">학사 과정</option>
-     <option value="석사">석사 과정</option>
-     <option value="박사">박사 과정</option>
-     <option value="어학연수">어학연수</option>
-     <option value="기타">기타 과정</option>
-     </select>
+        <option value="">
+          유학 과정을 선택해 주세요
+        </option>
 
-    <p id="term-help" class="study-help">
-      현재 준비하고 있는 유학 과정을 선택해 주세요.
-    </p>
+        <option value="학사">학사 과정</option>
+        <option value="석사">석사 과정</option>
+        <option value="박사">박사 과정</option>
+        <option value="어학연수">어학연수</option>
+        <option value="기타">기타 과정</option>
+      </select>
+
+      <p id="term-help" class="study-help">
+        현재 준비하고 있는 유학 과정을 선택해 주세요.
+      </p>
 
       <p
         id="term-error"
         class="study-error"
         role="alert">
       </p>
+
     </div>
 
 
-    <!-- 조건부 입력 -->
+    <!-- 9주차 조건부 입력 -->
     <div class="study-field">
-      <label class="study-check-row" for="language-option">
+
+      <label
+        class="study-check-row"
+        for="language-option">
 
         <input
           id="language-option"
@@ -371,10 +407,13 @@
           aria-expanded="false">
 
         <span>
-        <strong>어학 시험 목표도 함께 저장하기</strong>
-        <small>
-          선택하면 준비할 공인 어학시험을 정할 수 있습니다.
-        </small>
+          <strong>
+            어학 시험 목표도 함께 저장하기
+          </strong>
+
+          <small>
+            선택하면 준비할 어학시험을 함께 설정할 수 있습니다.
+          </small>
         </span>
 
       </label>
@@ -388,38 +427,41 @@
         <legend>준비할 어학 시험</legend>
 
         <div class="language-radio-list">
+
           <label>
-        <input
-         type="radio"
-         name="language-test"
-         value="IELTS">
-         IELTS
-        </label>
+            <input
+              type="radio"
+              name="language-test"
+              value="IELTS">
+            IELTS
+          </label>
 
-        <label>
-        <input
-         type="radio"
-         name="language-test"
-         value="TOEFL">
-         TOEFL
-        </label>
+          <label>
+            <input
+              type="radio"
+              name="language-test"
+              value="TOEFL">
+            TOEFL
+          </label>
 
-       <label>
-       <input
-       type="radio"
-       name="language-test"
-       value="PTE">
-       PTE
-      </label>
+          <label>
+            <input
+              type="radio"
+              name="language-test"
+              value="PTE">
+            PTE
+          </label>
 
-      <label>
-      <input
-      type="radio"
-      name="language-test"
-      value="기타">
-      기타 공인 어학시험
-      </label>
+          <label>
+            <input
+              type="radio"
+              name="language-test"
+              value="기타">
+            기타 어학시험
+          </label>
+
         </div>
+
       </fieldset>
 
       <p
@@ -427,11 +469,14 @@
         class="study-error"
         role="alert">
       </p>
+
     </div>
 
 
-    <button id="study-plan-save" type="submit">
-      지원 목표 저장하기
+    <button
+      id="study-plan-save"
+      type="submit">
+      유학 준비 플랜 저장하기
     </button>
 
     <p
@@ -441,6 +486,93 @@
     </p>
 
   </form>
+  <a id="view-saved-plan" href="#saved-goals" hidden>저장한 플랜 보기</a>
+</section>
+
+  <div class="plan-actions">
+  <button id="planBack4" type="button">준비 내용 다시 확인</button>
+  <button id="planRestart" type="button">
+  다시 시작하기
+</button>
+  </div>
+</section>
+
+</div>
+
+</section>
+
+<!-- 10주차 목록 -->
+<section id="saved-goals">
+  <p id="goal-action-status" role="status"></p>
+
+  <h2>저장한 플랜</h2>
+
+  <p>
+    저장한 유학 준비 플랜을 현재 준비 상태에 따라 확인할 수 있습니다.
+  </p>
+<div
+  class="goal-filters"
+  role="group"
+  aria-label="유학 준비 상태 필터">
+
+  <button
+    class="goal-filter is-active"
+    type="button"
+    data-filter="all"
+    aria-pressed="true">
+    전체
+  </button>
+
+  <button
+    class="goal-filter"
+    type="button"
+    data-filter="준비 시작 전"
+    aria-pressed="false">
+    준비 시작 전
+  </button>
+
+  <button
+    class="goal-filter"
+    type="button"
+    data-filter="준비 중"
+    aria-pressed="false">
+    준비 중
+  </button>
+
+  <button
+    class="goal-filter"
+    type="button"
+    data-filter="체크리스트 완료"
+    aria-pressed="false">
+    체크리스트 완료
+  </button>
+
+</div>
+
+  <p id="goal-count" aria-live="polite">
+    현재 표시 중인 플랜 0개
+  </p>
+
+
+  <div id="goal-empty">
+
+    <h3>
+      아직 저장한 유학 준비 플랜이 없습니다.
+    </h3>
+
+    <p>
+      목표 국가와 준비 상태를 입력해 첫 번째 플랜을 만들어 보세요.
+    </p>
+
+    <a href="#start">
+      플랜 만들기 시작
+    </a>
+
+  </div>
+
+
+  <div id="goal-list"></div>
+
 </section>
 
  <section id="newsletter" class="newsletter-card">

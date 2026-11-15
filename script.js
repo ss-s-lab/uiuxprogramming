@@ -225,11 +225,13 @@ const planNext2 = document.querySelector("#planNext2");
 const planBack3 = document.querySelector("#planBack3");
 const planComplete = document.querySelector("#planComplete");
 const planRestart = document.querySelector("#planRestart");
+const planBack4 = document.querySelector("#planBack4");
 
 const planStepNames = [
     "목표 국가 입력",
     "준비 상태 선택",
-    "내용 확인"
+    "내용 확인",
+    "입학일과 지원 목표 입력"
 ];
 
 
@@ -241,13 +243,8 @@ function showPlanStep(step) {
             Number(item.dataset.step) !== step;
     });
 
-    if (step <= 3) {
-        planProgress.textContent =
-            step + " / 3 · " + planStepNames[step - 1];
-    } else {
-        planProgress.textContent =
-            "유학 준비 플랜 완료";
-    }
+    planProgress.textContent =
+        step + " / " + planStepNames.length + " · " + planStepNames[step - 1];
 }
 
 
@@ -355,12 +352,18 @@ planComplete.addEventListener("click", function () {
 
     planCompleteMessage.textContent =
         country
-        + " 유학 준비 플랜이 완성되었습니다. "
+        + " 유학 준비 상태를 확인했습니다. "
         + "현재 준비 진행률은 "
         + checkedCount
         + " / 3입니다.";
 
     showPlanStep(4);
+    admissionDateInput.focus();
+});
+
+planBack4.addEventListener("click", function () {
+    showPlanStep(3);
+    planComplete.focus();
 });
 
 
@@ -409,99 +412,125 @@ const deadlineResult =
 const deadlineCalculate =
     document.querySelector("#deadlineCalculate");
 
+let calculatedDaysLeft = null;
+
 
 function resetDeadlinePlanner() {
+
     admissionDateInput.value = "";
 
     deadlineError.textContent = "";
 
     deadlineResult.textContent = "";
 
-    deadlineResult.classList.remove("is-success");
+    deadlineResult.classList.remove(
+        "is-success"
+    );
+
+    calculatedDaysLeft = null;
 }
 
 
-admissionDateInput.addEventListener("input", function () {
-    deadlineError.textContent = "";
+admissionDateInput.addEventListener(
+    "input",
+    function () {
 
-    deadlineResult.textContent = "";
-
-    deadlineResult.classList.remove("is-success");
-});
-
-
-deadlineCalculate.addEventListener("click", function () {
-
-    const admissionDate =
-        admissionDateInput.value;
-
-
-    // 날짜를 입력하지 않은 경우
-    if (admissionDate === "") {
-        deadlineError.textContent =
-            "목표 입학일을 선택해 주세요.";
-
-        admissionDateInput.focus();
-
-        return;
-    }
-
-
-    const targetDate =
-        new Date(admissionDate + "T00:00:00");
-
-    const today =
-        new Date();
-
-    today.setHours(0, 0, 0, 0);
-
-
-    // 오늘 또는 과거 날짜를 선택한 경우
-    if (targetDate <= today) {
-        deadlineError.textContent =
-            "오늘 이후의 입학 목표일을 선택해 주세요.";
+        deadlineError.textContent = "";
 
         deadlineResult.textContent = "";
 
-        deadlineResult.classList.remove("is-success");
-
-        admissionDateInput.focus();
-
-        return;
-    }
-
-
-    const oneDay =
-        1000 * 60 * 60 * 24;
-
-    const daysLeft =
-        Math.ceil(
-            (targetDate - today) / oneDay
+        deadlineResult.classList.remove(
+            "is-success"
         );
 
-
-    const country =
-        countryInput.value.trim();
-
-
-    deadlineError.textContent = "";
-
-    deadlineResult.textContent =
-        country
-        + " 유학 목표일까지 "
-        + daysLeft
-        + "일 남았습니다.";
+        calculatedDaysLeft = null;
+    }
+);
 
 
-    deadlineResult.classList.add("is-success");
-});
+deadlineCalculate.addEventListener(
+    "click",
+    function () {
+
+        const admissionDate =
+            admissionDateInput.value;
 
 
-planRestart.addEventListener("click", function () {
-    resetDeadlinePlanner();
-});
+        if (admissionDate === "") {
 
-// 9주차 - 맞춤 유학 준비 계획 폼
+            deadlineError.textContent =
+                "목표 입학일을 선택해 주세요.";
+
+            admissionDateInput.focus();
+
+            return;
+        }
+
+
+        const targetDate =
+            new Date(
+                admissionDate + "T00:00:00"
+            );
+
+        const today =
+            new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+
+        if (targetDate <= today) {
+
+            deadlineError.textContent =
+                "오늘 이후의 입학 목표일을 선택해 주세요.";
+
+            deadlineResult.textContent = "";
+
+            calculatedDaysLeft = null;
+
+            admissionDateInput.focus();
+
+            return;
+        }
+
+
+        const oneDay =
+            1000 * 60 * 60 * 24;
+
+
+        calculatedDaysLeft =
+            Math.ceil(
+                (targetDate - today)
+                / oneDay
+            );
+
+
+        const country =
+            countryInput.value.trim();
+
+
+        deadlineError.textContent = "";
+
+        deadlineResult.textContent =
+            country
+            + " 유학 목표일까지 "
+            + calculatedDaysLeft
+            + "일 남았습니다.";
+
+
+        deadlineResult.classList.add(
+            "is-success"
+        );
+    }
+);
+
+
+planRestart.addEventListener(
+    "click",
+    resetDeadlinePlanner
+);
+
+
+// 9주차 - 유학 준비 플랜 입력 폼
 
 const studyPlanForm =
     document.querySelector("#study-plan-form");
@@ -548,13 +577,12 @@ const studyPlanStatus =
     document.querySelector("#study-plan-status");
 
 
-// 주소 뒤에 ?plan-error=1을 붙이면 저장 실패 테스트
 const forcePlanFailure =
-    new URLSearchParams(location.search)
-        .has("plan-error");
+    new URLSearchParams(
+        location.search
+    ).has("plan-error");
 
 
-// 목표 학교 오류 표시
 function showSchoolError(message) {
 
     targetSchool.setAttribute(
@@ -562,34 +590,42 @@ function showSchoolError(message) {
         "true"
     );
 
-    schoolError.textContent = message;
+    schoolError.textContent =
+        message;
 
-    schoolField.classList.remove("is-valid");
+    schoolField.classList.remove(
+        "is-valid"
+    );
 
-    schoolField.classList.add("has-error");
+    schoolField.classList.add(
+        "has-error"
+    );
 
     return false;
 }
 
 
-// 목표 학교 오류 해제
 function clearSchoolError() {
 
-    targetSchool.removeAttribute("aria-invalid");
+    targetSchool.removeAttribute(
+        "aria-invalid"
+    );
 
     schoolError.textContent = "";
 
-    schoolField.classList.remove("has-error");
+    schoolField.classList.remove(
+        "has-error"
+    );
 
     updateSchoolExperience();
 }
 
 
-// 목표 학교 입력 검증
 function validateSchool() {
 
     const school =
         targetSchool.value.trim();
+
 
     if (school === "") {
 
@@ -598,6 +634,7 @@ function validateSchool() {
         );
     }
 
+
     if (school.length < 2) {
 
         return showSchoolError(
@@ -605,54 +642,53 @@ function validateSchool() {
         );
     }
 
+
     clearSchoolError();
 
     return true;
 }
 
 
-// 입력 중 글자 수와 조건 표시
 function updateSchoolExperience() {
 
     const length =
         targetSchool.value.length;
 
     const enough =
-        targetSchool.value.trim().length >= 2;
+        targetSchool.value.trim()
+            .length >= 2;
 
     const invalid =
         targetSchool.getAttribute(
             "aria-invalid"
         ) === "true";
 
+
     schoolCount.textContent =
         length + " / 60자";
+
 
     schoolField.classList.toggle(
         "is-valid",
         enough && !invalid
     );
 
+
     if (!invalid) {
 
-        if (enough) {
-
-            schoolHelp.textContent =
-                "입력 조건을 충족했습니다.";
-        }
-        else {
-
-            schoolHelp.textContent =
-                "학교명이나 관심 전공을 2자 이상 입력해 주세요.";
-        }
+        schoolHelp.textContent =
+            enough
+                ? "입력 조건을 충족했습니다."
+                : "학교명이나 관심 전공을 2자 이상 입력해 주세요.";
     }
 }
 
 
-// 목표 입학 시기 검증
 function validateAdmissionTerm() {
 
-    if (admissionTerm.value === "") {
+    if (
+        admissionTerm.value === ""
+    ) {
 
         admissionTerm.setAttribute(
             "aria-invalid",
@@ -665,6 +701,7 @@ function validateAdmissionTerm() {
         return false;
     }
 
+
     admissionTerm.removeAttribute(
         "aria-invalid"
     );
@@ -675,11 +712,11 @@ function validateAdmissionTerm() {
 }
 
 
-// 조건부 어학 입력 표시
 function syncLanguageFields() {
 
     const open =
         languageOption.checked;
+
 
     languageOption.setAttribute(
         "aria-expanded",
@@ -690,31 +727,44 @@ function syncLanguageFields() {
 
     languageOptions.disabled = !open;
 
+
     if (!open) {
 
-        languageInputs.forEach(function (input) {
-            input.checked = false;
-            input.removeAttribute("aria-invalid");
-        });
+        languageInputs.forEach(
+            function (input) {
+
+                input.checked = false;
+
+                input.removeAttribute(
+                    "aria-invalid"
+                );
+            }
+        );
 
         languageError.textContent = "";
     }
 }
 
 
-// 어학 시험 선택 검증
 function validateLanguage() {
 
-    if (languageOption.checked === false) {
+    if (
+        !languageOption.checked
+    ) {
+
         return true;
     }
+
 
     const selectedLanguage =
         document.querySelector(
             'input[name="language-test"]:checked'
         );
 
-    if (selectedLanguage === null) {
+
+    if (
+        selectedLanguage === null
+    ) {
 
         languageError.textContent =
             "준비할 어학 시험을 선택해 주세요.";
@@ -727,9 +777,15 @@ function validateLanguage() {
         return false;
     }
 
-    languageInputs.forEach(function (input) {
-        input.removeAttribute("aria-invalid");
-    });
+
+    languageInputs.forEach(
+        function (input) {
+
+            input.removeAttribute(
+                "aria-invalid"
+            );
+        }
+    );
 
     languageError.textContent = "";
 
@@ -737,7 +793,6 @@ function validateLanguage() {
 }
 
 
-// 제출 상태 변경
 function setStudyPlanSubmitState(
     loading,
     message,
@@ -750,29 +805,40 @@ function setStudyPlanSubmitState(
     );
 
     studyPlanSave.disabled = loading;
+    planRestart.disabled = loading;
+    planBack4.disabled = loading;
 
-    if (loading) {
-        studyPlanSave.textContent = "저장하는 중…";
-    }
-    else {
-        studyPlanSave.textContent =
-           "지원 목표 저장하기";
-    }
 
-    studyPlanStatus.textContent = message;
+    studyPlanSave.textContent =
+        loading
+            ? "저장하는 중…"
+            : "유학 준비 플랜 저장하기";
+
+
+    studyPlanStatus.textContent =
+        message;
+
 
     studyPlanStatus.classList.remove(
         "is-success",
         "is-error"
     );
 
-    if (state === "success") {
+
+    if (
+        state === "success"
+    ) {
+
         studyPlanStatus.classList.add(
             "is-success"
         );
     }
 
-    if (state === "error") {
+
+    if (
+        state === "error"
+    ) {
+
         studyPlanStatus.classList.add(
             "is-error"
         );
@@ -780,44 +846,472 @@ function setStudyPlanSubmitState(
 }
 
 
-// 잠시 기다리는 함수
-function waitStudyPlan(milliseconds) {
+function waitStudyPlan(
+    milliseconds
+) {
 
-    return new Promise(function (resolve) {
+    return new Promise(
+        function (resolve) {
 
-        window.setTimeout(
-            resolve,
-            milliseconds
-        );
-    });
+            window.setTimeout(
+                resolve,
+                milliseconds
+            );
+        }
+    );
 }
 
 
-// 브라우저에 저장
-async function saveStudyPlan(plan) {
+// 저장된 플랜
+
+let savedPlans =
+    JSON.parse(
+        localStorage.getItem(
+            "studyPathSavedPlans"
+        ) || "[]"
+    );
+
+
+function getCompletedItems() {
+
+    const completedItems = [];
+
+
+    prepareChecks.forEach(
+        function (check) {
+
+            if (check.checked) {
+
+                completedItems.push(
+                    check.value
+                );
+            }
+        }
+    );
+
+
+    return completedItems;
+}
+
+
+function getPlanStatus(
+    checkedCount
+) {
+
+    if (
+        checkedCount === 0
+    ) {
+
+        return "준비 시작 전";
+    }
+
+
+    if (
+        checkedCount === 3
+    ) {
+
+        return "체크리스트 완료";
+    }
+
+
+    return "준비 중";
+}
+
+
+async function saveStudyPlan(
+    plan
+) {
+
+    const checkedCount =
+        getCheckedCount();
+
+
+    const savedPlan = {
+
+        id: Date.now(),
+
+        country:
+            countryInput.value.trim(),
+
+        completedItems:
+            getCompletedItems(),
+
+        checkedCount:
+            checkedCount,
+
+        planStatus:
+            getPlanStatus(
+                checkedCount
+            ),
+
+        admissionDate:
+            admissionDateInput.value,
+
+        daysLeft:
+            calculatedDaysLeft,
+
+        targetSchool:
+            plan.targetSchool,
+
+        admissionTerm:
+            plan.admissionTerm,
+
+        languagePreparation:
+            plan.languagePreparation,
+
+        languageTest:
+            plan.languageTest
+    };
+
 
     await waitStudyPlan(600);
 
-    if (forcePlanFailure) {
+
+    if (
+        forcePlanFailure
+    ) {
 
         throw new Error(
             "수업용 저장 실패"
         );
     }
 
+
+    persistSavedPlans([savedPlan, ...savedPlans]);
+    selectGoalFilter(goalFilterButtons[0]);
+}
+
+
+function persistSavedPlans(nextSavedPlans) {
     localStorage.setItem(
-        "studyPathSavedPlan",
-        JSON.stringify(plan)
+        "studyPathSavedPlans",
+        JSON.stringify(nextSavedPlans)
+    );
+    savedPlans = nextSavedPlans;
+}
+
+
+// 10주차 필터
+
+const goalFilterButtons =
+    document.querySelectorAll(
+        ".goal-filter"
+    );
+
+const goalCount =
+    document.querySelector(
+        "#goal-count"
+    );
+
+const goalEmpty =
+    document.querySelector(
+        "#goal-empty"
+    );
+
+const goalList =
+    document.querySelector(
+        "#goal-list"
+    );
+
+let currentGoalFilter = "all";
+
+
+function getVisiblePlans() {
+
+    if (
+        currentGoalFilter
+        === "all"
+    ) {
+
+        return savedPlans;
+    }
+
+
+    return savedPlans.filter(
+        function (plan) {
+
+            return plan.planStatus
+                === currentGoalFilter;
+        }
     );
 }
 
 
-// 입력 중 피드백
+function getPlanDdayText(
+    admissionDate
+) {
+
+    const target =
+        new Date(
+            admissionDate
+            + "T00:00:00"
+        );
+
+    const today =
+        new Date();
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const oneDay =
+        1000 * 60 * 60 * 24;
+
+
+    const days =
+        Math.ceil(
+            (target - today)
+            / oneDay
+        );
+
+
+    if (
+        days > 0
+    ) {
+
+        return "D-" + days;
+    }
+
+
+    if (
+        days === 0
+    ) {
+
+        return "D-Day";
+    }
+
+
+    return "D+"
+        + Math.abs(days);
+}
+
+
+function renderSavedPlans() {
+
+    const visiblePlans =
+        getVisiblePlans();
+
+
+    goalList.replaceChildren();
+
+
+    goalCount.textContent =
+        "현재 표시 중인 플랜 "
+        + visiblePlans.length
+        + "개";
+
+
+    if (
+        visiblePlans.length
+        === 0
+    ) {
+
+        goalEmpty.hidden =
+            false;
+
+        goalList.hidden =
+            true;
+
+
+        const title =
+            goalEmpty.querySelector(
+                "h3"
+            );
+
+        const description =
+            goalEmpty.querySelector(
+                "p"
+            );
+
+        const action =
+            goalEmpty.querySelector(
+                "a"
+            );
+
+
+        if (
+            savedPlans.length === 0
+        ) {
+
+            title.textContent =
+                "아직 저장한 유학 준비 플랜이 없습니다.";
+
+            description.textContent =
+                "목표 국가와 준비 상태를 입력해 첫 번째 플랜을 만들어 보세요.";
+
+            action.hidden = false;
+        }
+        else {
+
+            title.textContent =
+                "선택한 준비 상태의 플랜이 없습니다.";
+
+            description.textContent =
+                "다른 준비 상태를 선택해 보세요.";
+
+            action.hidden = true;
+        }
+
+
+        return;
+    }
+
+
+    goalEmpty.hidden = true;
+
+    goalList.hidden = false;
+
+
+    visiblePlans.forEach(
+        function (plan) {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+            card.className =
+                "goal-card";
+
+
+            const title =
+                document.createElement(
+                    "h3"
+                );
+
+            title.textContent =
+                plan.country
+                + " · "
+                + plan.targetSchool;
+
+
+            const course =
+                document.createElement(
+                    "p"
+                );
+
+            course.textContent =
+                "희망 유학 과정: "
+                + plan.admissionTerm;
+
+
+            const status =
+                document.createElement(
+                    "p"
+                );
+
+            status.textContent =
+                "준비 상태: "
+                + plan.planStatus
+                + " · "
+                + plan.checkedCount
+                + " / 3";
+
+
+            const date =
+                document.createElement(
+                    "p"
+                );
+
+            date.textContent =
+                "목표 입학일: "
+                + plan.admissionDate
+                + " · "
+                + getPlanDdayText(
+                    plan.admissionDate
+                );
+
+
+            const completed =
+                document.createElement(
+                    "p"
+                );
+
+            completed.textContent =
+                plan.completedItems
+                    .length > 0
+                    ? "완료한 준비: "
+                      + plan.completedItems
+                          .join(", ")
+                    : "완료한 준비: 없음";
+
+
+            const language =
+                document.createElement(
+                    "p"
+                );
+
+            language.textContent =
+                plan.languagePreparation
+                    ? "어학시험: "
+                      + plan.languageTest
+                    : "어학시험 목표: 미설정";
+
+
+            const details = document.createElement("details");
+            const summary = document.createElement("summary");
+            summary.textContent = "플랜 상세 보기";
+            details.append(summary, course, date, completed, language);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "플랜 삭제";
+            deleteButton.setAttribute("aria-label", title.textContent + " 플랜 삭제");
+            deleteButton.addEventListener("click", function () {
+                const actionStatus = document.querySelector("#goal-action-status");
+                try {
+                    persistSavedPlans(savedPlans.filter(function (savedPlan) {
+                        return savedPlan !== plan;
+                    }));
+                } catch {
+                    actionStatus.textContent = "플랜을 삭제하지 못했습니다. 다시 시도해 주세요.";
+                    return;
+                }
+
+                renderSavedPlans();
+                document.querySelector(".goal-filter.is-active").focus();
+                actionStatus.textContent = title.textContent + " 플랜을 삭제했습니다.";
+            });
+
+            card.append(title, status, details, deleteButton);
+            goalList.append(card);
+        }
+    );
+}
+
+
+function selectGoalFilter(button) {
+    currentGoalFilter = button.dataset.filter;
+
+    goalFilterButtons.forEach(function (item) {
+        const selected = item === button;
+        item.classList.toggle("is-active", selected);
+        item.setAttribute("aria-pressed", String(selected));
+    });
+
+    document.querySelector("#goal-action-status").textContent = "";
+    renderSavedPlans();
+}
+
+goalFilterButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        selectGoalFilter(button);
+    });
+});
+
+
+// 9주차 입력 상태
+
 targetSchool.addEventListener(
     "input",
     function () {
 
         updateSchoolExperience();
+
 
         if (
             targetSchool.getAttribute(
@@ -831,12 +1325,14 @@ targetSchool.addEventListener(
 );
 
 
-// 입학 시기 수정 시 오류 해제
 admissionTerm.addEventListener(
     "change",
     function () {
 
-        if (admissionTerm.value !== "") {
+        if (
+            admissionTerm.value
+            !== ""
+        ) {
 
             admissionTerm.removeAttribute(
                 "aria-invalid"
@@ -848,43 +1344,61 @@ admissionTerm.addEventListener(
 );
 
 
-// 조건부 영역
 languageOption.addEventListener(
     "change",
     syncLanguageFields
 );
 
 
-// 라디오 선택 시 오류 해제
-languageInputs.forEach(function (input) {
+languageInputs.forEach(
+    function (input) {
 
-    input.addEventListener(
-        "change",
-        function () {
+        input.addEventListener(
+            "change",
+            function () {
 
-            languageInputs.forEach(
-                function (item) {
-                    item.removeAttribute(
-                        "aria-invalid"
-                    );
-                }
-            );
+                languageInputs.forEach(
+                    function (item) {
 
-            languageError.textContent = "";
-        }
-    );
-});
+                        item.removeAttribute(
+                            "aria-invalid"
+                        );
+                    }
+                );
+
+
+                languageError.textContent =
+                    "";
+            }
+        );
+    }
+);
 
 
 syncLanguageFields();
 
 
-// 최종 제출
+const viewSavedPlan = document.querySelector("#view-saved-plan");
+
+planRestart.addEventListener("click", function () {
+    studyPlanForm.reset();
+    clearSchoolError();
+    admissionTerm.removeAttribute("aria-invalid");
+    termError.textContent = "";
+    syncLanguageFields();
+    setStudyPlanSubmitState(false, "", "");
+    viewSavedPlan.hidden = true;
+});
+
+// 9주차 submit
+
 studyPlanForm.addEventListener(
     "submit",
     async function (event) {
 
         event.preventDefault();
+        if (studyPlanSave.disabled) return;
+        viewSavedPlan.hidden = true;
 
         const schoolValid =
             validateSchool();
@@ -894,6 +1408,7 @@ studyPlanForm.addEventListener(
 
         const languageValid =
             validateLanguage();
+
 
         if (
             !schoolValid
@@ -907,21 +1422,50 @@ studyPlanForm.addEventListener(
                 "error"
             );
 
+
             const firstInvalid =
                 studyPlanForm.querySelector(
                     '[aria-invalid="true"]'
                 );
 
+
             if (firstInvalid) {
+
                 firstInvalid.focus();
             }
+
+
+            return;
+        }
+
+
+        if (
+            countryInput.value
+                .trim() === ""
+            || admissionDateInput
+                .value === ""
+            || calculatedDaysLeft
+                === null
+        ) {
+
+            setStudyPlanSubmitState(
+                false,
+                "먼저 목표 국가와 목표 입학일을 설정하고 남은 준비 기간을 확인해 주세요.",
+                "error"
+            );
+
+            window.location.hash =
+                "#start";
 
             return;
         }
 
 
         const formData =
-            new FormData(studyPlanForm);
+            new FormData(
+                studyPlanForm
+            );
+
 
         const plan = {
 
@@ -955,7 +1499,7 @@ studyPlanForm.addEventListener(
 
         setStudyPlanSubmitState(
             true,
-            "지원 목표를 저장하고 있습니다.",
+            "유학 준비 플랜을 저장하고 있습니다.",
             ""
         );
 
@@ -963,11 +1507,13 @@ studyPlanForm.addEventListener(
         try {
 
             await saveStudyPlan(plan);
+            viewSavedPlan.hidden = false;
+
 
             setStudyPlanSubmitState(
                 false,
                 plan.targetSchool
-                + " 지원 목표를 저장했습니다.",
+                + " 유학 준비 플랜을 저장했습니다.",
                 "success"
             );
         }
@@ -981,3 +1527,83 @@ studyPlanForm.addEventListener(
         }
     }
 );
+
+
+renderSavedPlans();
+
+// 10주차 - 주요 메뉴
+
+const navLinks =
+    document.querySelectorAll(".main-nav a");
+
+const menuToggle =
+    document.querySelector("#menu-toggle");
+
+const mainNav =
+    document.querySelector("#main-nav");
+
+
+function updateCurrentNav() {
+
+    const currentHash =
+        window.location.hash;
+
+    navLinks.forEach(function (link) {
+
+        const current =
+            currentHash !== ""
+                ? link.getAttribute("href")
+                    === currentHash
+                : link === navLinks[0];
+
+        link.classList.toggle(
+            "is-current",
+            current
+        );
+
+        if (current) {
+            link.setAttribute(
+                "aria-current",
+                "location"
+            );
+        }
+        else {
+            link.removeAttribute(
+                "aria-current"
+            );
+        }
+    });
+}
+
+
+window.addEventListener(
+    "hashchange",
+    updateCurrentNav
+);
+
+updateCurrentNav();
+
+function setMenuOpen(open) {
+    mainNav.classList.toggle("is-open", open);
+    menuToggle.textContent = open ? "메뉴 닫기" : "메뉴 열기";
+    menuToggle.setAttribute("aria-expanded", String(open));
+}
+
+menuToggle.addEventListener("click", function () {
+    setMenuOpen(!mainNav.classList.contains("is-open"));
+});
+
+navLinks.forEach(function (link) {
+    link.addEventListener("click", function () {
+        if (mainNav.classList.contains("is-open")) {
+            setMenuOpen(false);
+            const destination = document.querySelector(link.hash);
+            destination.setAttribute("tabindex", "-1");
+            destination.focus({ preventScroll: true });
+        }
+    });
+});
+
+window.matchMedia("(max-width: 768px)").addEventListener("change", function () {
+    setMenuOpen(false);
+});
