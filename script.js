@@ -826,12 +826,15 @@ function setStudyPlanSubmitState(
     studyPlanSave.disabled = loading;
     planRestart.disabled = loading;
     planBack4.disabled = loading;
+    document.querySelectorAll(".goal-card button").forEach(function (button) {
+        button.disabled = loading;
+    });
 
 
     studyPlanSave.textContent =
         loading
             ? "저장하는 중…"
-            : "유학 준비 플랜 저장하기";
+            : (editingPlan ? "수정 내용 저장" : "유학 준비 플랜 저장하기");
 
 
     studyPlanStatus.textContent =
@@ -937,6 +940,8 @@ function getPlanStatus(
 }
 
 
+let editingPlan = null;
+
 async function saveStudyPlan(
     plan
 ) {
@@ -947,7 +952,7 @@ async function saveStudyPlan(
 
     const savedPlan = {
 
-        id: Date.now(),
+        id: editingPlan ? editingPlan.id : Date.now(),
 
         country:
             countryInput.value.trim(),
@@ -996,7 +1001,14 @@ async function saveStudyPlan(
     }
 
 
-    persistSavedPlans([savedPlan, ...savedPlans]);
+    const nextPlans = editingPlan
+        ? savedPlans.map(function (item) {
+            return item === editingPlan ? savedPlan : item;
+        })
+        : [savedPlan, ...savedPlans];
+
+    persistSavedPlans(nextPlans);
+    editingPlan = savedPlan;
     selectGoalFilter(goalFilterButtons[0]);
 }
 
@@ -1291,12 +1303,23 @@ function renderSavedPlans() {
                     return;
                 }
 
+                if (editingPlan === plan) {
+                    editingPlan = null;
+                    setStudyPlanSubmitState(false, "수정 중이던 플랜이 삭제되었습니다. 현재 입력으로 새 플랜을 저장할 수 있습니다.", "");
+                }
                 renderSavedPlans();
                 document.querySelector(".goal-filter.is-active").focus();
                 actionStatus.textContent = title.textContent + " 플랜을 삭제했습니다.";
             });
 
-            card.append(title, status, details, deleteButton);
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "플랜 수정";
+            editButton.setAttribute("aria-label", title.textContent + " 플랜 수정");
+            editButton.addEventListener("click", function () {
+                startEditingPlan(plan);
+            });
+            card.append(title, status, details, editButton, deleteButton);
             goalList.append(card);
         }
     );
@@ -1400,6 +1423,7 @@ syncLanguageFields();
 const viewSavedPlan = document.querySelector("#view-saved-plan");
 
 planRestart.addEventListener("click", function () {
+    editingPlan = null;
     studyPlanForm.reset();
     clearSchoolError();
     admissionTerm.removeAttribute("aria-invalid");
@@ -1408,6 +1432,87 @@ planRestart.addEventListener("click", function () {
     setStudyPlanSubmitState(false, "", "");
     viewSavedPlan.hidden = true;
 });
+
+function startEditingPlan(plan) {
+    if (studyPlanSave.disabled) return;
+    planRestart.click();
+    editingPlan = plan;
+    planFlow.hidden = false;
+    planStart.hidden = true;
+
+    countryInput.value = plan.country;
+    handleCountryInput();
+    prepareChecks.forEach(function (check) {
+        check.checked = (plan.completedItems || []).includes(check.value);
+    });
+    handlePrepareChange();
+
+    admissionDateInput.value = plan.admissionDate || "";
+    if (admissionDateInput.value) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        calculatedDaysLeft = Math.ceil(
+            (new Date(admissionDateInput.value + "T00:00:00") - today) / 86400000
+        );
+        deadlineResult.textContent = "목표 입학일: " + admissionDateInput.value;
+    }
+
+    targetSchool.value = plan.targetSchool;
+    admissionTerm.value = plan.admissionTerm;
+    languageOption.checked = Boolean(plan.languagePreparation);
+    syncLanguageFields();
+    languageInputs.forEach(function (input) {
+        input.checked = plan.languagePreparation && input.value === plan.languageTest;
+    });
+    updateSchoolExperience();
+    updateExamReview();
+    setStudyPlanSubmitState(false, "저장한 플랜을 불러왔습니다. 내용을 수정한 뒤 마지막 단계에서 수정 내용을 저장해 주세요.", "");
+    window.location.hash = "#start";
+    showPlanStep(1);
+    countryInput.focus();
+}
+
+// 저장 버튼 위에서 현재 과정과 시험 목표를 함께 확인합니다.
+const examReviewSummary = document.querySelector("#exam-review-summary");
+const examReviewMessage = document.querySelector("#exam-review-message");
+
+function updateExamReview() {
+    const selectedExam = document.querySelector('input[name="language-test"]:checked');
+    const examName = languageOption.checked
+        ? (selectedExam ? selectedExam.value : "시험 선택 필요")
+        : "미설정";
+
+    examReviewSummary.textContent =
+        "희망 과정: " + (admissionTerm.value || "미선택")
+        + " / 시험 목표: " + examName;
+}
+
+admissionTerm.addEventListener("change", function () {
+    const selectedExam = document.querySelector('input[name="language-test"]:checked');
+    examReviewMessage.textContent = languageOption.checked && selectedExam
+        ? "희망 과정을 변경했어요. 선택한 시험 목표가 새 과정의 모집요강에 맞는지 다시 확인해 주세요."
+        : "";
+    updateExamReview();
+});
+
+languageOption.addEventListener("change", function () {
+    examReviewMessage.textContent = "";
+    updateExamReview();
+});
+
+languageInputs.forEach(function (input) {
+    input.addEventListener("change", function () {
+        examReviewMessage.textContent = "";
+        updateExamReview();
+    });
+});
+
+planRestart.addEventListener("click", function () {
+    examReviewMessage.textContent = "";
+    updateExamReview();
+});
+
+updateExamReview();
 
 // 9주차 submit
 
@@ -1523,6 +1628,8 @@ studyPlanForm.addEventListener(
         );
 
 
+        const wasEditing = Boolean(editingPlan);
+
         try {
 
             await saveStudyPlan(plan);
@@ -1532,7 +1639,7 @@ studyPlanForm.addEventListener(
             setStudyPlanSubmitState(
                 false,
                 plan.targetSchool
-                + " 유학 준비 플랜을 저장했습니다.",
+                + (wasEditing ? " 플랜의 수정 내용을 저장했습니다." : " 유학 준비 플랜을 저장했습니다."),
                 "success"
             );
         }
@@ -1641,3 +1748,4 @@ function closeMenuOnEscape(event) {
         menuToggle.focus();
     }
 }
+

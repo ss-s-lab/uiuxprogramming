@@ -837,3 +837,24 @@ input[type="radio"]{
 #main-content, .plan-step h3{
   scroll-margin-top: 20px;
 }
+
+
+
+/* 과정 변경 후 시험 목표 재확인 */
+.exam-review{
+  margin: 20px 0;
+  padding: 20px;
+  color: #26374f;
+  background-color: #eef4fb;
+  border: 2px solid #2f63b7;
+  border-radius: 12px;
+}
+
+.exam-review[hidden]{
+  display: none;
+}
+
+.exam-review h5{
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
