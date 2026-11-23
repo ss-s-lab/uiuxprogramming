@@ -374,8 +374,3 @@ URL 뒤에 `?plan-error=1`을 추가하면 저장 실패 상태를 확인할 수
 4. 저장한 플랜의 상세 보기를 Enter로 펼치고 필터를 Space 또는 Enter로 선택해 결과 수와 빈 결과 안내를 확인합니다.
 5. 390px 화면에서 메뉴를 키보드로 열고 Esc로 닫은 뒤 메뉴 버튼으로 초점이 돌아오는지 확인합니다.
 6. PC 1100px와 모바일 390px에서 가로 넘침과 기존 플랜 저장·상세 보기·삭제를 확인합니다.
-
-### 주소
-
-- GitHub 저장소 https://github.com/ss-s-lab/uiuxprogramming
-- 배포 웹페이지 https://ss-s-lab.github.io/uiuxprogramming/
