@@ -173,6 +173,7 @@ function resetTabsAndPanels() {
     tabs.forEach(function (tab) {
         tab.classList.remove("is-active");
         tab.setAttribute("aria-selected", "false");
+        tab.tabIndex = -1;
     });
 
     panels.forEach(function (panel) {
@@ -189,6 +190,7 @@ function activateTab(clickedTab) {
 
     clickedTab.classList.add("is-active");
     clickedTab.setAttribute("aria-selected", "true");
+    clickedTab.tabIndex = 0;
 
     targetPanel.classList.add("is-active");
     targetPanel.hidden = false;
@@ -205,6 +207,19 @@ function handleTabClick(event) {
 // 각 탭에 click 이벤트 연결
 tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
+    tab.addEventListener("keydown", function (event) {
+        const keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+        if (!keys.includes(event.key)) return;
+        event.preventDefault();
+        let index = Array.from(tabs).indexOf(tab);
+        if (event.key === "Home") index = 0;
+        if (event.key === "End") index = tabs.length - 1;
+        if (event.key === "ArrowRight") index = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") index = (index + tabs.length - 1) % tabs.length;
+        resetTabsAndPanels();
+        activateTab(tabs[index]);
+        tabs[index].focus();
+    });
 
 });
 // 7주차 유학 준비 사용자 흐름
@@ -245,6 +260,10 @@ function showPlanStep(step) {
 
     planProgress.textContent =
         step + " / " + planStepNames.length + " · " + planStepNames[step - 1];
+
+    const heading = document.querySelector('.plan-step[data-step="' + step + '"] h3');
+    heading.tabIndex = -1;
+    heading.focus();
 }
 
 
@@ -1573,6 +1592,8 @@ function updateCurrentNav() {
             );
         }
     });
+    const currentLink = document.querySelector(".main-nav a[aria-current]");
+    document.title = "StudyPath | " + (currentLink ? currentLink.textContent.trim() : "유학 준비 서비스");
 }
 
 
@@ -1607,3 +1628,16 @@ navLinks.forEach(function (link) {
 window.matchMedia("(max-width: 768px)").addEventListener("change", function () {
     setMenuOpen(false);
 });
+
+
+
+// Esc로 모바일 메뉴를 닫은 뒤 열기 버튼으로 초점을 돌립니다.
+mainNav.addEventListener("keydown", closeMenuOnEscape);
+menuToggle.addEventListener("keydown", closeMenuOnEscape);
+
+function closeMenuOnEscape(event) {
+    if (event.key === "Escape" && mainNav.classList.contains("is-open")) {
+        setMenuOpen(false);
+        menuToggle.focus();
+    }
+}

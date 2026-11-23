@@ -778,3 +778,62 @@ button:active{
   display: inline-block;
   margin: 12px 0;
 }
+
+
+
+/* 11주차 웹 접근성 */
+:where(a, button, input, select, summary, [tabindex]):focus-visible{
+  outline: 3px solid #172f57;
+  outline-offset: 4px;
+}
+
+.skip-link{
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  color: #ffffff;
+  background: #172f57;
+  transform: translateY(-180%);
+}
+
+.skip-link:focus{
+  transform: translateY(0);
+}
+
+.main-nav a[aria-current],
+.goal-filter[aria-pressed="true"],
+.tab[aria-selected="true"]{
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.goal-filter[aria-pressed="true"]::before{
+  content: "✓ ";
+}
+
+input::placeholder{
+  color: #59657d;
+  opacity: 1;
+}
+
+#newsletter-button:disabled{
+  color: #ffffff;
+  background-color: #59657d;
+}
+
+button, summary, input, select{
+  min-height: 44px;
+}
+
+input[type="checkbox"],
+input[type="radio"]{
+  min-height: auto;
+}
+
+#main-content, .plan-step h3{
+  scroll-margin-top: 20px;
+}

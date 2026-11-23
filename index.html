@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
   <!--
     사용자: 해외 유학을 준비하는 사람
     목적: 복잡한 유학 준비 과정을 체계적으로 관리
@@ -56,7 +57,7 @@
 
 
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section id="about">
     <h2>StudyPath란?</h2>
 
@@ -84,7 +85,7 @@
       class="tab is-active"
       type="button"
       role="tab"
-      aria-selected="true"
+      aria-selected="true" tabindex="0"
       aria-controls="panel-schedule"
       data-target="#panel-schedule">
       맞춤 준비 일정
@@ -95,7 +96,7 @@
       class="tab"
       type="button"
       role="tab"
-      aria-selected="false"
+      aria-selected="false" tabindex="-1"
       aria-controls="panel-language"
       data-target="#panel-language">
       어학 시험 관리
@@ -106,7 +107,7 @@
       class="tab"
       type="button"
       role="tab"
-      aria-selected="false"
+      aria-selected="false" tabindex="-1"
       aria-controls="panel-document"
       data-target="#panel-document">
       지원 서류
@@ -339,7 +340,7 @@
           학교명이나 관심 전공을 2자 이상 입력해 주세요.
         </p>
 
-        <p id="school-count" aria-live="polite">
+        <p id="school-count">
           0 / 60자
         </p>
       </div>
